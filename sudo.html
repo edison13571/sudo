@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        *{
+            box-sizing: border-box;
+        }
+        .line{
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .unit{
+            width: 60px;
+            height: 60px;
+            border: 1px solid #999999;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .outline {
+            border: 2px solid #000000;
+        }
+        .unit-input{
+            width: 100%;
+            height:100%;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
+        }
+        .unit-sub{
+            background: #999999;
+            border: 1px solid #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="line" style="width: 250px">
+        <div v-for="(block,index) in mySudo.block.members" :key="index" class="line outline" style="width: 125px">
+            <div v-for="(unit,lineIndex) in block" :key="lineIndex" class="unit">
+                <input type="number" v-model="mySudo.mapAllUnits[unit].number" :min="1" :max="mySudo.sudoSize" :disabled="mySudo.mapAllUnits[unit].state==='setting'" class="unit-input" @input="changeInput"/>
+            </div>
+        </div>
+    </div>
+    <div>state:{{mySudo.state}}</div>
+    <button @click="getAll">全部推理</button>
+    <button @click="getOne">推理一个</button>
+    <div>line:</div>
+    <div class="line">
+        <div  v-for="(item,index) in mySudo.line.numbers" :key="index" class="unit">{{mySudo.sudoSize-item}}</div>
+    </div>
+    <div>row:</div>
+    <div class="line">
+        <div  v-for="(item,index) in mySudo.row.numbers" :key="index"  class="unit">{{mySudo.sudoSize-item}}</div>
+    </div>
+    <div>block:</div>
+    <div class="line">
+        <div  v-for="(item,index) in mySudo.block.numbers" :key="index"  class="unit">{{mySudo.sudoSize-item}}</div>
+    </div>
+
+</div>
+<script src="dist/sudo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    let _self;
+    var app = new Vue({
+        el: '#app',
+        data: {
+           mySudo: {}
+        },
+        mounted() {
+            _self = this
+            this.mySudo = new Sudo(4)
+            let arr = [{key:'111',number:1},{key:'112',number:2},{key:'121',number:3},{key:'121',number:4},{key:'213',number:3},{key:'214',number:4},{key:'342',number:4},{key:'433',number:4},{key:'331',number:2},{key:'444',number:2}]
+            this.mySudo.readQuestion(arr)
+            this.mySudo.calChange()
+        },
+        watch:{
+            mySudo:{
+                handler(newName, oldName) {
+                    // this.mySudo.calChange()
+                },
+                deep:true
+            }
+        },
+        methods:{
+            changeInput(){
+                this.mySudo.calChange()
+            },
+            getAll(){
+                this.mySudo.finishAllByOne(2000)
+            },
+            getOne(){
+                if (this.mySudo.finishOne()) {
+                    this.mySudo.calChange()
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
+

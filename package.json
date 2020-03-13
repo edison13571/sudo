@@ -1,0 +1,11 @@
+{
+  "name": "sudo",
+  "version": "1.0.0",
+  "description": "js for sudo",
+  "main": "sudo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "edison",
+  "license": "ISC"
+}
